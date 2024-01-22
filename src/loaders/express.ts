@@ -21,7 +21,8 @@ export default (app: express.Application) => {
 
   /// 에러 핸들러
   app.use((err, req, res, next) => {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ error: "시스템 내부 오류가 발생하였습니다. 관리자에게 문의부탁드립니다." });
+    // res.status(500).send({ error: err.message });
 
     return next(err);
   });

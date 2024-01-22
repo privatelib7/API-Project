@@ -69,7 +69,14 @@ export async function rankDataReqHandler(req,res)
     }
     else
     {
-        res.send(await scrapRankData(rankType))
+        try
+        {
+            res.send(await scrapRankData(rankType))
+        }
+        catch(err)
+        {
+            res.status(402).send({"error":err.message})
+        }
     }
 }
 
@@ -84,7 +91,14 @@ export async function hanjaDataReqHandler(req,res)
     }
     else
     {
-        res.send(await scrapHanjaData(lang,hanja))
+        try
+        {
+            res.send(await scrapHanjaData(lang,hanja))
+        }
+        catch(err)
+        {
+            res.status(402).send({"error":err.message})
+        }
     }    
 }
 
@@ -92,5 +106,12 @@ export async function stockDataReqHandler(req,res)
 {
     const stockCode = req.params.stockCode;
 
-    res.send(await scrapStockData(stockCode))
+    try
+    {
+        res.send(await scrapStockData(stockCode))
+    }
+    catch(err)
+    {
+        res.status(402).send({"error":err.message})
+    }
 }

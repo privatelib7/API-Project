@@ -156,9 +156,9 @@ export default (app: Router) => {
      *                 - $ref: '#/components/schemas/HanjaResponseKor'
      *                 - $ref: '#/components/schemas/HanjaResponseJp'
      *       400:
-     *         description: "지원하지 않는 파라미터입니다. (lang: string 타입, 지원언어 종류: kor/jp, hanja: string 타입, 한자)"
+     *         description: "지원하지 않는 타입(지원 타입:kor, jp)"
      *       402:
-     *         description: "확인되지 않는 한자입니다."
+     *         description: "요청한 한자를 찾을 수 없습니다."
      *       500:
      *         description: "시스템 내부 오류가 발생하였습니다. 관리자에게 문의부탁드립니다."
      * components:
