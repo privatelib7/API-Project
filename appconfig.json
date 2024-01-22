@@ -1,0 +1,21 @@
+{
+    "PORT":3000,
+    "api": {
+        "prefix": "/api"
+    },
+    "axios":{
+        "maxRetryCnt": 5
+    },
+    "jsonDB":{
+        "filename":"apiData"
+        ,"saveOnPush":true
+        ,"humanReadable":false
+        ,"separator":"/"
+    },
+    "cacheJsonDB":{
+        "filename":"apiCacheDB"
+        ,"saveOnPush":true
+        ,"humanReadable":false
+        ,"separator":"/"
+    }
+}
