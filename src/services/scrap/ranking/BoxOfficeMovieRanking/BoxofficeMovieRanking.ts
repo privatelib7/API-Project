@@ -1,8 +1,7 @@
 import { AxiosInstance, AxiosStatic } from 'axios'
 
-import { HtmlDetail } from '../../types/interfaces/ranking'
-import { BasicRank } from './BasicRank'
-import { cheerio, RetryAxiosMng, RankType, ScrapRanking } from './utils'
+import { BasicRank } from '../BasicRank'
+import { cheerio, RetryAxiosMng, RankType, ScrapRanking } from '../../../../utils'
 
 import axios from 'axios'
 
@@ -91,11 +90,24 @@ export class BoxofficeMovieRanking extends BasicRank implements ScrapRanking
         const htmlArr: any[] = await this.reqHtmlData();
 
         // rankList 파싱
-        const rankList = this.parseRank((htmlArr[0] as any).res.data);
+        let rankList = this.parseRank((htmlArr[0] as any).res.data)
 
         // 파싱 정보 로깅
         this.logRankList(htmlArr, rankList);
 
+        if(!this.isRankListValid(rankList))
+        {
+            this.errLogger.error(`파싱 실패: 랭크 리스트 검증 실패\r\n${JSON.stringify(rankList)}`)
+         
+            // 초기화
+            rankList = [];
+        }
+
         return rankList;
+    }
+
+    isRankListValid(rankList: any[])
+    {
+        return rankList.length > 0 && rankList.length < 200
     }
 }

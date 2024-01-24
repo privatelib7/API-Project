@@ -1,14 +1,12 @@
 
-import { StockPriceScrap }  from "../services/stock/StockPriceScrap"
-import { KoreanHanjaScraper }  from '../services/hanja/KoreanHanjaScraper'
-import { JapanHanajaScraper } from '../services/hanja/JapanHanajaScraper';
+import { KoreanHanja, JapanHanaja }  from '../services/scrap/hanja/'
+import { OriconMusicRank, BoxofficeMovieRanking } from "../services/scrap/ranking"
+import { StockPrice }  from "../services/scrap/stock/"
 
-import { OriconMusicRank } from "../services/rankingScrap"
-import { RankingSystem } from '../services/rankingScrap/RankingSystem';
-import { BoxofficeMovieRanking } from '../services/rankingScrap/BoxofficeMovieRanking';
+import { RankingSystem } from '../services/scrap/ranking/RankingSystem';
 
-import { HanjaType, RankType } from "../types/interfaces/ranking";
-import { HanjaScraper } from '../types/interfaces/hanja/interface';
+import { RankType } from "../types/interfaces/ranking";
+import { HanjaType, HanjaScraper } from '../types/interfaces/hanja/interface';
 
 export function unkownTypeHandler(res, type)
 {
@@ -42,10 +40,10 @@ function scrapHanjaData(lang:HanjaType, hanja:string)
     switch(lang)
     {
         case HanjaType.korHanja:
-            hanjaService = new KoreanHanjaScraper();
+            hanjaService = new KoreanHanja();
             break;
         case HanjaType.jpHanja:
-            hanjaService = new JapanHanajaScraper();
+            hanjaService = new JapanHanaja();
             break;
     }
 
@@ -54,9 +52,9 @@ function scrapHanjaData(lang:HanjaType, hanja:string)
 
 async function scrapStockData(stockCode:string)
 {
-    let stockPriceScrap = new StockPriceScrap();
+    let stockPrice = new StockPrice();
     
-    return await stockPriceScrap.getStockInfo(stockCode);
+    return await stockPrice.scrapStockInfo(stockCode);
 }
 
 export async function rankDataReqHandler(req,res)

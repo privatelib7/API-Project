@@ -3,7 +3,7 @@ import ip from 'ip';
 import fs from 'fs';
 import { jest } from '@jest/globals';
 
-import { OriconMusicRank } from "../../../src/services/rankingScrap/OriconMusicRank";
+import { OriconMusicRank } from "../../../src/services/scrap/ranking/OriconChart/OriconMusicRank";
 
 describe('OriconMusicRank 클래스 단위 테스트', () => {
     it("html 파싱을 정상적으로 수행한다.",() => {

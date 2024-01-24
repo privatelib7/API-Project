@@ -13,11 +13,6 @@ export enum RankType {
     boxofficeMovie = "boxofficeMovie"
 }
 
-export enum HanjaType {
-    korHanja = "kor",
-    jpHanja = "jp"
-}
-
 export interface HtmlDetail{
     html: AxiosResponse<any, any>;
     remainRetryCnt: number;

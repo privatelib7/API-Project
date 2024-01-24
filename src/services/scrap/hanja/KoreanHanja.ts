@@ -1,9 +1,9 @@
 import { NaverHanjaInfo } from "./NaverHanjaInfo";
-import { HanjaScraper, KoreaHanjaDictInfo } from "../../types/interfaces/hanja/interface";
+import { HanjaScraper, KoreaHanjaDictInfo } from "../../../types/interfaces/hanja/interface";
 import { AxiosInstance } from "axios";
-import { RetryAxiosMng } from "../rankingScrap/utils";
+import { RetryAxiosMng } from "../../../utils";
 
-export class KoreanHanjaScraper implements HanjaScraper
+export class KoreanHanja implements HanjaScraper
 {
     private hanjaInfo:NaverHanjaInfo;
     private axios:AxiosInstance

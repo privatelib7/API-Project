@@ -7,11 +7,16 @@ export type KoreaHanjaDictInfo = {
 }
 
 export type JapanHanjaDictInfo = {
-    expAudioRead:string,
-    expMeaningRead:string
+    expAudioRead:string, /* 음독 */
+    expMeaningRead:string /* 훈독 */
 }
 
 export interface HanjaScraper
 {
     scrapHanjaInfo(hanja: any): Promise<object>;
+}
+
+export enum HanjaType {
+    korHanja = "kor",
+    jpHanja = "jp"
 }

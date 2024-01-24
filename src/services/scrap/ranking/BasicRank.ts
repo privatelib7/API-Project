@@ -1,8 +1,8 @@
-import { Logger } from "../../types/interfaces/Logger"
-import { HtmlDetail } from "../../types/interfaces/ranking";
-import { LoggerFile, RankType } from "./utils";
+import { Logger } from "../../../types/interfaces/Logger"
+import { HtmlDetail } from "../../../types/interfaces/ranking";
+import { FileLogger, RankType } from "../../../utils";
 
-import config from '../../config';
+import config from '../../../config';
 
 export class  BasicRank
 {
@@ -15,9 +15,9 @@ export class  BasicRank
     {
         this.rankType = rankType;
 
-        this.dataLogger = new LoggerFile("./log/scrapDataLog/"+this.rankType+"/");
-        this.errLogger = new LoggerFile("./log/scrapDataLog/"+this.rankType+"/error/");
-        this.summaryLogger = new LoggerFile("./log/scrapDataLog/"+this.rankType+"/summary/");
+        this.dataLogger = new FileLogger("./log/scrapDataLog/"+this.rankType+"/");
+        this.errLogger = new FileLogger("./log/scrapDataLog/"+this.rankType+"/error/");
+        this.summaryLogger = new FileLogger("./log/scrapDataLog/"+this.rankType+"/summary/");
     }
 
     public setDataLogger(dataLogger: Logger)

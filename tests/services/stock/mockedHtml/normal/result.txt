@@ -1,0 +1,1 @@
+{"sharePrice":74000,"company":"삼성전자","currentTime":"2024.01.24","currentStatus":"기준(장마감)"}

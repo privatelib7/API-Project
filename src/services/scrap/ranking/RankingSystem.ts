@@ -1,4 +1,4 @@
-import { ScrapRanking } from "../../types/interfaces/ranking"
+import { ScrapRanking } from "../../../types/interfaces/ranking"
 
 export class RankingSystem
 {

@@ -3,7 +3,7 @@ import ip from 'ip';
 import fs from 'fs';
 import { jest } from '@jest/globals';
 
-import { BoxofficeMovieRanking } from "../../../src/services/rankingScrap/BoxofficeMovieRanking";
+import { BoxofficeMovieRanking } from "../../../src/services/scrap/ranking/BoxOfficeMovieRanking/BoxofficeMovieRanking";
 import RetryAxiosMng from '../../../src/utils/axios/RetryAxiosMng';
 
 describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {

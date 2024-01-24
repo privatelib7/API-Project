@@ -1,14 +1,9 @@
-// const iconv = require('iconv-lite') 
-import { AxiosStatic } from 'axios'
+const iconv = require('iconv-lite');
 import axios from 'axios'
 
-import * as fs from 'fs'
-
-import { HtmlDetail } from '../../types/interfaces/ranking'
-import { BasicRank } from './BasicRank'
-import { ScrapRanking, RankType, cheerio, RetryAxiosMng } from './utils'
-
-let iconv = require('iconv-lite');
+import { HtmlDetail } from '../../../../types/interfaces/ranking'
+import { BasicRank } from '../BasicRank'
+import { ScrapRanking, RankType, cheerio, RetryAxiosMng } from '../../../../utils'
 
 export class OriconMusicRank extends BasicRank implements ScrapRanking
 {
@@ -23,18 +18,28 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
         this.axios = (new RetryAxiosMng()).createInstance(MAX_RETRY_AXIOS, 1000, "https://www.oricon.co.jp/", 'arraybuffer');
     }
 
-    getDateTimeFormated(format: string, date:Date=new Date()): string {
+    getDateTimeFormated(format: string, date:Date=new Date()): string
+    {
         if (format !== "yyyy-mm-dd") {
             throw new Error("지원하는 날짜 포맷이 아닙니다.");
         }
     
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더합니다.
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is zero-based
         const day = date.getDate().toString().padStart(2, '0');
     
         return `${year}-${month}-${day}`;
     }
     
+    getRecentActiveDay(): string
+    {
+        const daydiff = 2;
+
+        const date = new Date();
+        date.setDate(date.getDate() - daydiff);
+    
+        return this.getDateTimeFormated('yyyy-mm-dd', date);
+    }
 
     /**
      * 음악 정보 스크래핑 함수
@@ -44,14 +49,13 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
     {
         let reqArr =[] 
 
-        let searchDate = new Date();
-
-        searchDate.setDate(searchDate.getDate() - 2);
+        // 스크랩은 2일 전의 데이터들부터 안정적으로 파싱이 가능합니다.
+        const searchDate = this.getRecentActiveDay();
          
         reqArr.push(
-            this.axios.get("/rank/js/d/"+this.getDateTimeFormated('yyyy-mm-dd', searchDate)+"/p/1/",'arraybuffer'),
-            this.axios.get("/rank/js/d/"+this.getDateTimeFormated('yyyy-mm-dd', searchDate)+"/p/2/",'arraybuffer'),
-            this.axios.get("/rank/js/d/"+this.getDateTimeFormated('yyyy-mm-dd', searchDate)+"/p/3/",'arraybuffer')
+            this.axios.get("/rank/js/d/"+searchDate+"/p/1/",'arraybuffer'),
+            this.axios.get("/rank/js/d/"+searchDate+"/p/2/",'arraybuffer'),
+            this.axios.get("/rank/js/d/"+searchDate+"/p/3/",'arraybuffer')
         )
         
         let htmlArr: HtmlDetail[] = await axios.all(reqArr)
@@ -62,7 +66,12 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
         // 파싱 정보 로깅
         this.logRankList(htmlArr, rankList);
 
-        return rankList;
+        return {'rankList':rankList, 'date':searchDate};
+    }
+
+    isRankListValid(rankList: any[])
+    {
+        return rankList.length == 30
     }
 
     public parseRankPage(html:string)
@@ -96,10 +105,18 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
             }
             catch(e)
             {
-                this.errLogger.error("파싱 실패" + e)
+                this.errLogger.error(`파싱 실패: ${e}`)
             }    
         }
         
-         return rankList
+        if(!this.isRankListValid(rankList))
+        {
+            this.errLogger.error(`파싱 실패: 랭크 리스트 검증 실패\r\n${JSON.stringify(rankList)}`)
+         
+            // 초기화
+            rankList = [];
+        }
+
+        return rankList
     }
 }

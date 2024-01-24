@@ -4,3 +4,6 @@ build/
 .idea/
 coverage/
 log/
+
+**/dist/*.js
+**/dist/*.spec.js

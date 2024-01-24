@@ -38,12 +38,12 @@ export default (app: Router) => {
      *       - in: path
      *         name: rankType
      *         required: true
-     *         description: "랭킹 타입, 지원 랭킹 타입: oriconMusic: 오리콘 차트 데일리 싱글 랭킹, boxofficeMovie: 올해 박스 오피스 랭킹"
+     *         description: "랭킹 타입, 지원 랭킹 타입: oriconMusic: 오리콘 차트 데일리 싱글 랭킹(현재 시간 기준 2일 전의 데이터를 반환합니다.), boxofficeMovie: 올해 박스 오피스 랭킹"
      *         schema:
      *           type: string
      *     responses:
      *       200:
-     *         description: 성공적인 응답. 응답 형식은 'rankType' 파라미터에 따라 다릅니다.
+     *         description: 성공적인 응답. 응답 형식은 'rankType' 파라미터에 따라 다릅니다. (만약 파싱에 실패할 경우, 빈 배열을 반환합니다.)
      *         content:
      *           application/json:
      *             schema:
@@ -99,7 +99,7 @@ export default (app: Router) => {
      *           type: string
      *     responses:
      *       200:
-     *         description: 성공적인 응답
+     *         description: 성공적인 응답(만약 파싱에 실패할 경우, 전체 빈값이 반환됩니다.)
      *         content:
      *           application/json:
      *             schema:
@@ -168,21 +168,35 @@ export default (app: Router) => {
      *       properties:
      *         mix_pron:
      *           type: string
+     *           description: "한자의 뜻과 음"
      *           example: "사람 인"
      *         learning_info_category:
      *           type: string
+     *           description: "한자 구성원리 타이틀"
      *           example: "한자 구성원리"
-     *         # ... 기타 한국어 응답에 대한 프로퍼티
+     *         learning_info_category_1depth:
+     *           type: string
+     *           description: "한자 종류 명칭"
+     *           example: "상형문자"
+     *         learning_info_category_1depth_content:
+     *           type: string
+     *           description: "한자 종류 명칭에 대한 설명"
+     *           example: "구체적인 사물의 모양을 본뜸..."
+     *         learning_info_body:
+     *           type: string
+     *           description: "\"그림으로 배우는 한자\" 학습정보 스크랩 html"
+     *           example: "<html>...</html>"
      *     HanjaResponseJp:
      *       type: object
      *       properties:
      *         expAudioRead:
      *           type: string
+     *           description: "음독"
      *           example: "じん·にん"
      *         expMeaningRead:
      *           type: string
+     *           description: "훈독"
      *           example: "ひと"
-     *         # ... 기타 일본어 응답에 대한 프로퍼티
      */
 
     route.get("/hanja/:lang/:hanja", cacheMiddleware(60000), hanjaDataReqHandler)
