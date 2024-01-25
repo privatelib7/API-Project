@@ -43,13 +43,22 @@ export default (app: Router) => {
      *           type: string
      *     responses:
      *       200:
-     *         description: 성공적인 응답. 응답 형식은 'rankType' 파라미터에 따라 다릅니다. (만약 파싱에 실패할 경우, 빈 배열을 반환합니다.)
+     *         description: 성공적인 응답
      *         content:
      *           application/json:
      *             schema:
-     *               oneOf:
-     *                 - $ref: '#/components/schemas/OriconMusicRanking'
-     *                 - $ref: '#/components/schemas/BoxOfficeMovieRanking'
+     *               type: object
+     *               properties:
+     *                 rankList:
+     *                   type: array
+     *                   items:
+     *                     oneOf:
+     *                       - $ref: '#/components/schemas/OriconMusicRanking'
+     *                       - $ref: '#/components/schemas/BoxOfficeMovieRanking'
+     *                 date:
+     *                   type: string
+     *                   format: date
+     *                   example: "2024-01-23"
      *       400:
      *         description: "지원하지 않는 파라미터입니다. (rankType: string 타입, 지원타입 종류: oriconMusic/boxofficeMovie)"
      *       500:
@@ -57,30 +66,26 @@ export default (app: Router) => {
      * components:
      *   schemas:
      *     OriconMusicRanking:
-     *       type: array
-     *       items:
-     *         type: object
-     *         properties:
-     *           title:
-     *             type: string
-     *             example: "HEARTBREAKER/C‘monova"
-     *           name:
-     *             type: string
-     *             example: "Kis-My-Ft2"
-     *           ranking:
-     *             type: integer
-     *             example: 1
+     *       type: object
+     *       properties:
+     *         title:
+     *           type: string
+     *           example: "HEARTBREAKER/C‘monova"
+     *         name:
+     *           type: string
+     *           example: "Kis-My-Ft2"
+     *         ranking:
+     *           type: integer
+     *           example: 1
      *     BoxOfficeMovieRanking:
-     *       type: array
-     *       items:
-     *         type: object
-     *         properties:
-     *           ranking:
-     *             type: integer
-     *             example: 1
-     *           title:
-     *             type: string
-     *             example: "The Beekeeper"
+     *       type: object
+     *       properties:
+     *         ranking:
+     *           type: integer
+     *           example: 1
+     *         title:
+     *           type: string
+     *           example: "The Beekeeper"
      */
 
     route.get("/rank/:rankType", cacheMiddleware(60000), rankDataReqHandler)
@@ -99,7 +104,7 @@ export default (app: Router) => {
      *           type: string
      *     responses:
      *       200:
-     *         description: 성공적인 응답(만약 파싱에 실패할 경우, 전체 빈값이 반환됩니다.)
+     *         description: 성공적인 응답
      *         content:
      *           application/json:
      *             schema:
@@ -113,11 +118,15 @@ export default (app: Router) => {
      *                   type: string
      *                   description: 회사명
      *                   example: "삼성전자"
-     *                 curTime:
+     *                 currentTime:
      *                   type: string
-     *                   format: date-time
+     *                   format: date
      *                   description: 현재 시간
-     *                   example: "2024-01-21T20:37:18.999Z"
+     *                   example: "2024-01-25"
+     *                 currentStatus:
+     *                   type: string
+     *                   description: 현재 상태
+     *                   example: "기준(장마감)"
      *       400:
      *         description: "지원하지 않는 파라미터입니다. (stockCode: number 타입, 종목 코드)"
      *       402:
@@ -148,7 +157,7 @@ export default (app: Router) => {
      *           type: string
      *     responses:
      *       200:
-     *         description: 성공적인 응답. 응답 형식은 'lang' 파라미터에 따라 다릅니다.
+     *         description: 성공적인 응답
      *         content:
      *           application/json:
      *             schema:
