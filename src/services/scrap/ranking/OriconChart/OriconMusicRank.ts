@@ -1,21 +1,17 @@
-const iconv = require('iconv-lite');
-import axios from 'axios'
 
-import { HtmlDetail } from '../../../../types/interfaces/ranking'
+import { RankType, ScrapRanking, HtmlDetail } from '../../../../types/interfaces/ranking'
+
 import { BasicRank } from '../BasicRank'
-import { ScrapRanking, RankType, cheerio, RetryAxiosMng } from '../../../../utils'
 
 export class OriconMusicRank extends BasicRank implements ScrapRanking
 {
-    private axios
+    private rankUtils:any
 
-    constructor()
+    constructor(rankUtils:any)
     {
         super(RankType.oriconMusic)
-        
-        const MAX_RETRY_AXIOS = this.getMaxAxiosRetryCnt()
-        
-        this.axios = (new RetryAxiosMng()).createInstance(MAX_RETRY_AXIOS, 1000, "https://www.oricon.co.jp/", 'arraybuffer');
+
+        this.rankUtils = rankUtils
     }
 
     getDateTimeFormated(format: string, date:Date=new Date()): string
@@ -53,12 +49,12 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
         const searchDate = this.getRecentActiveDay();
          
         reqArr.push(
-            this.axios.get("/rank/js/d/"+searchDate+"/p/1/",'arraybuffer'),
-            this.axios.get("/rank/js/d/"+searchDate+"/p/2/",'arraybuffer'),
-            this.axios.get("/rank/js/d/"+searchDate+"/p/3/",'arraybuffer')
+            this.rankUtils.retryAxios.get("/rank/js/d/"+searchDate+"/p/1/",'arraybuffer'),
+            this.rankUtils.retryAxios.get("/rank/js/d/"+searchDate+"/p/2/",'arraybuffer'),
+            this.rankUtils.retryAxios.get("/rank/js/d/"+searchDate+"/p/3/",'arraybuffer')
         )
         
-        let htmlArr: HtmlDetail[] = await axios.all(reqArr)
+        let htmlArr: HtmlDetail[] = await this.axios.all(reqArr)
 
         // rankList 파싱
         const rankList = this.parseRankList(htmlArr);
@@ -71,14 +67,14 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
 
     isRankListValid(rankList: any[])
     {
-        return rankList.length == 30
+        return rankList.length >= 30 //공동 순위가 존재하는 경우가 있어서 30개 이상이어야 합니다.
     }
 
     public parseRankPage(html:string)
     {
         let rankList = [];
 
-        const $ = cheerio.load(html);
+        const $ = this.cheerio.load(html);
         
         $('.box-rank-entry').each((index, element) => {
             const title = $(element).find('.title').text().trim();
@@ -99,7 +95,7 @@ export class OriconMusicRank extends BasicRank implements ScrapRanking
         {
             try
             {
-                const decodedHtml = iconv.decode(Buffer.from(htmlArr[i].res.data), 'Shift_JIS');
+                const decodedHtml = this.iconv.decode(Buffer.from(htmlArr[i].res.data), 'Shift_JIS');
 
                 rankList = rankList.concat(this.parseRankPage(decodedHtml))
             }

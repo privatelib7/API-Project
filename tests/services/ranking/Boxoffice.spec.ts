@@ -1,14 +1,15 @@
-import axios from 'axios'
-import ip from 'ip';
 import fs from 'fs';
 import { jest } from '@jest/globals';
 
 import { BoxofficeMovieRanking } from "../../../src/services/scrap/ranking/BoxOfficeMovieRanking/BoxofficeMovieRanking";
-import RetryAxiosMng from '../../../src/utils/axios/RetryAxiosMng';
+import RetryAxiosMng from '../../../src/utils/http/axios/RetryAxiosMng';
 
 describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {
     it("scrap을 수행하면 axios 요청이 이루어진다.",()=>{
-        const boxofficeMovieRanking = new BoxofficeMovieRanking()  
+        const boxUtils = {
+            retryAxios:(new RetryAxiosMng()).createInstance(5, 1000, "https://www.boxofficemojo.com/")
+        }
+        const boxofficeMovieRanking = new BoxofficeMovieRanking(boxUtils)  
         
         const reqHtmlDataSpy = jest.spyOn((boxofficeMovieRanking as any), 'reqHtmlData').mockReturnValue([{res:{data:"test"}}]);
 
@@ -21,7 +22,10 @@ describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {
         const mockedHtmlContent = fs.readFileSync(__dirname+'/BoxOfficeMockedHtml/normal/dummyHtml.html', 'utf8');
         const mockedResultContent = fs.readFileSync(__dirname+'/BoxOfficeMockedHtml/normal/result.txt', 'utf8');
 
-        const boxofficeMovieRanking = new BoxofficeMovieRanking()
+        const boxUtils = {
+            retryAxios:(new RetryAxiosMng()).createInstance(5, 1000, "https://www.boxofficemojo.com/")
+        }
+        const boxofficeMovieRanking = new BoxofficeMovieRanking(boxUtils)
         const result = boxofficeMovieRanking.parseRank(mockedHtmlContent);
 
         expect(atob(mockedResultContent)==(result as any)).toEqual(true);
@@ -31,7 +35,10 @@ describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {
         const mockedFailedHtmlContent = fs.readFileSync(__dirname+'/BoxOfficeMockedHtml/failed/dummyHtml.html', 'utf8');
         const mockedResultContent = fs.readFileSync(__dirname+'/BoxOfficeMockedHtml/normal/result.txt', 'utf8');
 
-        const boxofficeMovieRanking = new BoxofficeMovieRanking()
+        const boxUtils = {
+            retryAxios:(new RetryAxiosMng()).createInstance(5, 1000, "https://www.boxofficemojo.com/")
+        }
+        const boxofficeMovieRanking = new BoxofficeMovieRanking(boxUtils)
         const result = boxofficeMovieRanking.parseRank(mockedFailedHtmlContent);
 
         expect(atob(mockedResultContent)==( result as any)).toEqual(false);

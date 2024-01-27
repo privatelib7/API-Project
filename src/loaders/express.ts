@@ -1,11 +1,8 @@
 import express from 'express';
 
-import { Router } from 'express';
-
 import routes from '../api';
-import config from '../config';
 
-export default (app: express.Application) => {
+export default (app: express.Application, config:any) => {
   /**
    * Health Check endpoints
    * */

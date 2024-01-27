@@ -1,14 +1,19 @@
-import axios, { AxiosInstance } from 'axios'
-import ip from 'ip';
 import fs from 'fs';
 import { jest } from '@jest/globals';
 
 import { KoreanHanja } from '../../../src/services/scrap/hanja/KoreanHanja';
+import { NaverHanjaInfo } from '../../../src/services/scrap/hanja';
+import { RetryAxiosMng } from '../../../src/utils/http/axios';
 
 describe('KoreanHanjaScrap 클래스 단위 테스트', () => {
     it("html 파싱을 정상적으로 수행한다.",async()=>{
         // 객체 생성
-        const koreanHanja = new KoreanHanja();
+        const korUtils = {
+            NaverHanjaInfo: NaverHanjaInfo,
+            RetryAxiosMng: RetryAxiosMng,
+            axios: (new RetryAxiosMng()).createInstance(5, 1000, "https://hanja.dict.naver.com/")
+        }
+        const koreanHanja = new KoreanHanja(korUtils);
         
         // axios 리턴값 mocking
         const mockedHtmlContent_EntityId = fs.readFileSync(__dirname+"/mockedHtml/korDummySuccEntityId - 人.html", 'utf8');
@@ -31,7 +36,12 @@ describe('KoreanHanjaScrap 클래스 단위 테스트', () => {
     })
     it("html 파싱에 실패한다.",async()=>{
         // 객체 생성
-        const koreanHanja = new KoreanHanja();
+        const korUtils = {
+            NaverHanjaInfo: NaverHanjaInfo,
+            RetryAxiosMng: RetryAxiosMng,
+            axios: (new RetryAxiosMng()).createInstance(5, 1000, "https://hanja.dict.naver.com/")
+        }
+        const koreanHanja = new KoreanHanja(korUtils);
 
         // axios 리턴값 mocking
         const mockedHtmlContent_EntityId = fs.readFileSync(__dirname+"/mockedHtml/korDummyFail - 人.html", 'utf8');

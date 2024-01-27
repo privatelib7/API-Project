@@ -1,6 +1,6 @@
 import ip from 'ip';
 import fs from 'fs';
-import { Logger } from '../types/interfaces/Logger';
+import { Logger } from '../../types/interfaces/logger/Logger';
 
 // class to log a message
 class FileLogger implements Logger

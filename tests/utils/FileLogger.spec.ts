@@ -2,7 +2,7 @@ import axios from 'axios'
 import ip from 'ip';
 import fs from 'fs';
 import { jest } from '@jest/globals';
-import FileLogger from '../../src/utils/FileLogger'
+import FileLogger from '../../src/utils/logger/FileLogger'
 
 
 // ip.address()를 mocking하는 함수

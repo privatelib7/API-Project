@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import RetryAxiosMng from '../../../src/utils/axios/RetryAxiosMng'
+import RetryAxiosMng from '../../../src/utils/http/axios/RetryAxiosMng'
 
 import axios from 'axios'
 

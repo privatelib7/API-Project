@@ -1,8 +1,9 @@
 //import
 import expressLoader from './express';
-import { logger } from './logger';
 import express from 'express';
 
+import { FileLogger } from "../utils/logger";
+
 //export
-export { expressLoader, logger }
+export { expressLoader, FileLogger }
 export { express }

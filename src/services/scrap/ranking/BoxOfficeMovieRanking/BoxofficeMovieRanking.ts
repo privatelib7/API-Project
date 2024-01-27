@@ -1,24 +1,16 @@
-import { AxiosInstance, AxiosStatic } from 'axios'
+import { RankType, ScrapRanking } from '../../../../types/interfaces/ranking'
 
 import { BasicRank } from '../BasicRank'
-import { cheerio, RetryAxiosMng, RankType, ScrapRanking } from '../../../../utils'
-
-import axios from 'axios'
 
 export class BoxofficeMovieRanking extends BasicRank implements ScrapRanking
 {
-    private axios: AxiosInstance
+    private rankUtils:any
 
-    constructor()
+    constructor(utils:any)
     {
         super(RankType.oriconMusic)
 
-        this.axios = this.createAxiosInstance();
-    }
-
-    setAxios(axios:AxiosInstance)
-    {
-        this.axios = axios
+        this.rankUtils = utils
     }
 
     getDateMinusDays(days: number): string
@@ -33,27 +25,15 @@ export class BoxofficeMovieRanking extends BasicRank implements ScrapRanking
         return `${year}-${month}-${day}`;
     }
 
-    createAxiosInstance()
-    {
-        const MAX_RETRY_AXIOS = this.getMaxAxiosRetryCnt();
-
-        return (new RetryAxiosMng()).createInstance(MAX_RETRY_AXIOS, 1000, "https://www.boxofficemojo.com/");
-    }
-
-    getAxios()
-    {
-        return axios
-    }
-
     async reqHtmlData()
     {
         let reqArr = []
         reqArr.push(
-            this.axios.get("/year/world/"),
+            this.rankUtils.retryAxios.get("/year/world/"),
         )
-
+        
         // axios 스크랩
-        return (this.getAxios()).all(reqArr)
+        return this.axios.all(reqArr)
     }
 
     parseRank(html: string)
@@ -61,7 +41,7 @@ export class BoxofficeMovieRanking extends BasicRank implements ScrapRanking
         let rankList = [];
 
         try {
-            const $ = cheerio.load(html);
+            const $ = this.cheerio.load(html);
 
             const trWithoutTh = $('tr').filter((i, el) => {
                 return $(el).find('th').length === 0;

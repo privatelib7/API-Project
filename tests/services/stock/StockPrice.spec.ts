@@ -1,9 +1,7 @@
-import axios from 'axios'
-import ip from 'ip';
 import fs from 'fs';
-import { jest } from '@jest/globals';
 
 import { StockPrice } from "../../../src/services/scrap/stock/StockPrice";
+import { RetryAxiosMng } from '../../../src/utils/http/axios';
 
 describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {
 
@@ -11,7 +9,10 @@ describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {
         const mockedHtmlContent = fs.readFileSync(__dirname+'/mockedHtml/normal/dummyHtml.html', 'utf8');
         const mockedResultContent = fs.readFileSync(__dirname+'/mockedHtml/normal/result.txt', 'utf8');
 
-        const stockPrice = new StockPrice()
+        const utils = {
+            retryAxios:(new RetryAxiosMng()).createInstance(5, 1000, "https://finance.naver.com/", 'arraybuffer'),
+        }
+        const stockPrice = new StockPrice(utils)
         const result = stockPrice.parse(mockedHtmlContent);
 
         expect(mockedResultContent == JSON.stringify(result)).toEqual(true);
@@ -21,7 +22,10 @@ describe('BoxofficeMovieRanking 클래스 단위 테스트', () => {
         const mockedFailedHtmlContent = fs.readFileSync(__dirname+'/mockedHtml/fail/dummyHtml.html', 'utf8');
         const mockedResultContent = fs.readFileSync(__dirname+'/mockedHtml/fail/result.txt', 'utf8');
 
-        const stockPrice = new StockPrice()
+        const utils = {
+            retryAxios:(new RetryAxiosMng()).createInstance(5, 1000, "https://finance.naver.com/", 'arraybuffer'),
+        }
+        const stockPrice = new StockPrice(utils)
         const result = stockPrice.parse(mockedFailedHtmlContent);
 
         expect(mockedResultContent == JSON.stringify(result)).toEqual(false);

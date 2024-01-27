@@ -1,24 +1,31 @@
-import { jest } from '@jest/globals';
-import { init } from '../../src/loaders'; // 모듈 경로는 실제 경로에 맞게 조정하세요.
-import { expressLoader, logger } from '../../src/loaders/utils';
+import { init } from '../../src/loaders';
+import { expressLoader } from '../../src/loaders/utils';
 
+// 모의 'log' 메소드 생성
+const mockLog = jest.fn();
+
+// 모의 객체 및 함수 생성
 jest.mock('../../src/loaders/utils', () => ({
+  express: jest.fn(),
   expressLoader: jest.fn(),
-  logger: {
-    log: jest.fn()
-  }
+  FileLogger: jest.fn().mockImplementation(() => ({
+    log: mockLog
+  }))
 }));
 
-describe('init', () => {
-    it('initializes the server correctly', async () => {
-        const mockApp = {} as any; // Express 애플리케이션에 대한 모의 구현
+describe('init function', () => {
+  it('should initialize correctly', async () => {
+    const app = {} as any; // express.Application의 모의 구현
+    const config = {}; // 필요한 구성의 모의 구현
 
-        await init(mockApp);
+    await init(app, config);
 
-        expect(expressLoader).toHaveBeenCalledWith(mockApp);
-        expect(logger.log).toHaveBeenCalledTimes(3);
-        expect(logger.log).toHaveBeenNthCalledWith(1, "Server loaders loading start... 🔥");
-        expect(logger.log).toHaveBeenNthCalledWith(2, "express loaded");
-        expect(logger.log).toHaveBeenNthCalledWith(3, "Server loaders loading End ✅");
-    });
+    // expressLoader가 올바르게 호출되었는지 확인
+    expect(expressLoader).toHaveBeenCalledWith(app, config);
+
+    // 로그가 올바르게 기록되었는지 확인
+    expect(mockLog).toHaveBeenCalledWith("Server loaders loading start... 🔥");
+    expect(mockLog).toHaveBeenCalledWith("express loaded");
+    expect(mockLog).toHaveBeenCalledWith("Server loaders loading End ✅");
+  });
 });

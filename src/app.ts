@@ -18,7 +18,7 @@ function closeServer() {
 
 async function startServer() {
   // 서버 시작 프로세스 
-  await loaders.init(app);
+  await loaders.init(app, config);
 
   // 서버 포트 개방
   server = app.listen(config.port, () => {

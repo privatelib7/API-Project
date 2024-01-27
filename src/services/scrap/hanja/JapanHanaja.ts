@@ -1,20 +1,15 @@
-import { NaverHanjaInfo } from "./NaverHanjaInfo";
-import { JapanHanjaDictInfo, HanjaScraper } from "../../../types/interfaces/hanja/interface";
-import { AxiosInstance } from "axios";
-import { RetryAxiosMng } from "../../../utils";
+import { HanjaScraper, JapanHanjaDictInfo } from "../../../types/interfaces/hanja";
 
 export class JapanHanaja implements HanjaScraper
 {
-    private hanjaInfo:NaverHanjaInfo;
-    private axios:AxiosInstance
+    private axios:any
 
-    constructor()
+    constructor(utils:any)
     {
-        this.hanjaInfo = new NaverHanjaInfo();
-        this.axios = (new RetryAxiosMng()).createInstance(5, 1000, "https://ja.dict.naver.com/")
+        this.axios = utils.axios;
     }
 
-    setAxios(axios:AxiosInstance)
+    setAxios(axios:any)
     {
         this.axios = axios
     }

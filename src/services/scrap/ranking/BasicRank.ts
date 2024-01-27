@@ -1,23 +1,32 @@
-import { Logger } from "../../../types/interfaces/Logger"
-import { HtmlDetail } from "../../../types/interfaces/ranking";
-import { FileLogger, RankType } from "../../../utils";
+import axios from "axios";
+import { Logger } from "../../../types/interfaces/logger/Logger"
+import { HtmlDetail, RankType } from "../../../types/interfaces/ranking";
 
-import config from '../../../config';
+import { FileLogger } from "../../../utils/logger";
+import { cheerio } from "../../../utils/http";
+let iconv = require('iconv-lite');
 
-export class  BasicRank
+export class BasicRank
 {
     protected rankType: RankType
     protected dataLogger: Logger
     protected errLogger: Logger
     protected summaryLogger: Logger
+    protected maxRetryCnt: number;
+    
+    protected axios=axios;
+    protected cheerio=cheerio;
+    protected iconv=iconv;
 
-    constructor(rankType:RankType)
+    constructor(rankType:RankType, maxRetryCnt:number = 5)
     {
         this.rankType = rankType;
 
         this.dataLogger = new FileLogger("./log/scrapDataLog/"+this.rankType+"/");
         this.errLogger = new FileLogger("./log/scrapDataLog/"+this.rankType+"/error/");
         this.summaryLogger = new FileLogger("./log/scrapDataLog/"+this.rankType+"/summary/");
+
+        this.maxRetryCnt = maxRetryCnt;
     }
 
     public setDataLogger(dataLogger: Logger)
@@ -35,7 +44,7 @@ export class  BasicRank
 
     protected getMaxAxiosRetryCnt()
     {
-        return config.axios.maxRetryCnt
+        return this.maxRetryCnt
     }
 
     protected logRankList(htmlArr: HtmlDetail[], rankList:any[])
