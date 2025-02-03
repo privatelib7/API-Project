@@ -33,6 +33,7 @@ export const cacheMiddleware = (ttl: number) => {
     const cachedData = getCache(key)?.data;
     if (cachedData) {
       console.log('Cache hit for:', key);
+      res.setHeader('content-type', 'application/json');
       res.send(cachedData);
     } else {
       console.log('Cache miss for:', key);

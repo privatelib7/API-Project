@@ -8,8 +8,6 @@ import { OriconMusicRank } from "./OriconChart/OriconMusicRank";
 import { RankingSystem } from "./RankingSystem";
 import { RetryAxiosMng } from "../../../utils/http/axios";
 
-const iconv = require('iconv-lite');
-
 export function scrapRankData(rankType:RankType)
 {
     const rankingSystem = new RankingSystem()

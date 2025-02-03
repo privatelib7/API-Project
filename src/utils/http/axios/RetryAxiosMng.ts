@@ -1,4 +1,4 @@
-import { Axios, AxiosInstance, AxiosResponse, AxiosStatic } from 'axios';
+import { AxiosInstance, AxiosStatic } from 'axios';
 
 import axios from 'axios'
 
@@ -30,7 +30,9 @@ class RetryAxiosMng
 
     reRequest(instance:AxiosInstance, milliseconds:number, originalRequest) {
         return new Promise((resolve, reject) => {
-            setTimeout(() => resolve(this.reqByInstance(instance, originalRequest)), milliseconds);
+            setTimeout(() => {
+                resolve(this.reqByInstance(instance, originalRequest))
+            }, milliseconds);
         });
     };
 
@@ -44,7 +46,8 @@ class RetryAxiosMng
             _remainRetryCnt -= 1 // 차감
 
             if (_remainRetryCnt <= 0) {
-                return Promise.reject({err: error, remainRetryCnt: _remainRetryCnt});
+                return {res: error, remainRetryCnt: _remainRetryCnt}
+                // return Promise.reject({err: error, remainRetryCnt: _remainRetryCnt});
             }
             
             const originalRequest = error.config

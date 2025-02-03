@@ -7,3 +7,5 @@ log/
 
 **/dist/*.js
 **/dist/*.spec.js
+
+tests/scratch/

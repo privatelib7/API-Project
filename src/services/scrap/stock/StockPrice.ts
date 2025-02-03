@@ -6,7 +6,6 @@ export class StockPrice
     private utils:any;
 
     private cheerio = cheerio;
-    private fs = require('fs');
     private iconv = require('iconv-lite');
     
     private errLogger = new FileLogger("./log/scrapDataLog/stock/error/");
@@ -18,17 +17,12 @@ export class StockPrice
         this.utils = utils;        
     }
 
-    //삼성전자: 005930
-    //삼성SDS: 018260
-    scrapStockInfo(code:string): Promise<{'sharePrice':number, 'company':string}>
+    async scrapStockInfo(code:string): Promise<{'sharePrice':number, 'company':string}>
     {
-        return new Promise(async(resolve,reject)=>{
-            const response:any = await this.utils.retryAxios.get('/item/main.nhn?code='+code);
-            
-            const decodedHtml = this.iconv.decode(Buffer.from(response.res.data), 'EUC-KR');
-
-            resolve(this.parse(decodedHtml));
-        })
+        const response:any = await this.utils.retryAxios.get('/item/main.nhn?code='+code);
+        const decodedHtml = this.iconv.decode(Buffer.from(response.res.data), 'EUC-KR');
+                
+        return this.parse(decodedHtml);
     }
 
     parse(html:string)
@@ -47,12 +41,7 @@ export class StockPrice
         {
             this.errLogger.error("파싱 실패" + e)
 
-            return {
-                'sharePrice':0,
-                'company':'',
-                'currentTime':'',
-                'currentStatus':'',
-                }
+            throw new Error("확인되지 않은 종목 코드입니다.");
         }
     }
 }

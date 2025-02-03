@@ -9,59 +9,57 @@ export function unkownTypeHandler(res, type)
     return res.status(402).send({ error: "지원하지 않는 타입(지원 타입:" + availTypes + ")" });
 }
 
+function isValidHanjaType(lang: any) {
+    return Object.values(HanjaType).includes(lang);
+}
+
+function isValidRankType(rankType: any) {
+    return !Object.values(RankType).includes(rankType);
+}
+
 export async function rankDataReqHandler(req,res)
 {
     const rankType = req.params.rankType;
 
-    if(!Object.values(RankType).includes(rankType))
+    if(isValidRankType(rankType))
     {
         unkownTypeHandler(res, RankType)
+        return;
     }
-    else
-    {
-        try
-        {
-            res.send(await scrapRankData(rankType))
-        }
-        catch(err)
-        {
-            res.status(402).send({"error":err.message})
-        }
-    }
+    
+    scrapRankData(rankType).then(result =>{
+        res.send(result)
+    }).catch(err=>{
+        res.status(402).send({"error":err.message})
+    })
 }
+
 
 export async function hanjaDataReqHandler(req,res)
 {
     const hanja = req.params.hanja;
     const lang = req.params.lang
 
-    if(!Object.values(HanjaType).includes(lang))
+    if(!isValidHanjaType(lang))
     {
         unkownTypeHandler(res, HanjaType)
+        return;
     }
-    else
-    {
-        try
-        {
-            res.send(await scrapHanjaData(lang,hanja))
-        }
-        catch(err)
-        {
-            res.status(402).send({"error":err.message})
-        }
-    }    
+    
+    scrapHanjaData(lang,hanja).then(result=>{
+        res.send(result)
+    }).catch(err=>
+        res.status(402).send({"error":err.message})
+    ) 
 }
 
 export async function stockDataReqHandler(req,res)
 {
     const stockCode = req.params.stockCode;
 
-    try
-    {
-        res.send(await scrapStockData(stockCode))
-    }
-    catch(err)
-    {
+    scrapStockData(stockCode).then(result =>{
+        res.send(result)
+    }).catch(err=>{
         res.status(402).send({"error":err.message})
-    }
+    })
 }

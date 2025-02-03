@@ -1,4 +1,3 @@
-import axios from 'axios'
 import ip from 'ip';
 import fs from 'fs';
 import { jest } from '@jest/globals';

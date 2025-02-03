@@ -43,7 +43,7 @@ export class JapanHanaja implements HanjaScraper
     private parseInfo(responseJson:any)
     {
         if(!responseJson.searchResultMap?.searchResultListMap?.WORD?.items[0]){
-            throw new Error("응답값 파싱에 실패하였습니다.")
+            throw new Error("요청한 한자를 찾을 수 없습니다.")
         }
 
         var expAudioRead = responseJson.searchResultMap.searchResultListMap.WORD.items[0].expAudioRead

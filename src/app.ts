@@ -41,5 +41,10 @@ async function startServer() {
 // 서버 시작
 startServer()
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+
 module.exports.app = app;
 module.exports.closeServer = closeServer;

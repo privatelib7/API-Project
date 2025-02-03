@@ -89,10 +89,11 @@ export class KoreanHanja implements HanjaScraper
             learning_info_category:learning_info_category, 
             learning_info_category_1depth:learning_info_category_1depth, 
             learning_info_category_1depth_content:learning_info_category_1depth_content,
-            learning_info_body:learning_info_body}
+            // learning_info_body:learning_info_body}
+        }
     }
 
-    public async scrapHanjaDetailInfo(entryId: String): Promise<KoreaHanjaDictInfo>
+    public async scrapHanjaDetailInfo(entryId: String): Promise<any>
     {
         const path = this.scrapHanjaDetailInfoOption(entryId);
         const config = {
@@ -101,6 +102,9 @@ export class KoreanHanja implements HanjaScraper
             },
         };
         const response:any = await this.axios.get(path, config)
+        if(!response) {
+            throw new Error("최대 요청 제한 횟수를 모두 실패하였습니다.")
+        }
         
         return this.parseScrapHanjaDetailInfo(response.res.data);
     }

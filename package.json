@@ -21,8 +21,19 @@
     "express": "^4.18.2",
     "iconv-lite": "^0.6.3",
     "ip": "^1.1.8",
+    "json2csv": "^6.0.0-alpha.2",
+    "node-fetch": "^3.3.2",
     "node-mocks-http": "^1.14.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
-  }
+  },
+  "name": "api-project",
+  "description": "- 랭킹 조회\r   - 오리콘 차트, 데일리 싱글 차트\r     - 일본 사이트의 특성상 SHIFT-JIL 인코딩 기능을 추가했습니다.\t\r   - 박스오피스 \r - 한국, 일본 한자 조회\r - 네이버 주가 조회",
+  "version": "1.0.0",
+  "main": "jest.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "author": "",
+  "license": "ISC"
 }
